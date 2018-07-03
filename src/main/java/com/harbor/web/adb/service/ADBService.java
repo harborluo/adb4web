@@ -47,7 +47,7 @@ public class ADBService {
 
     private String lastScreenFile = null;
 
-    public boolean captureScreen(String filePath){
+    public synchronized boolean captureScreen(String filePath){
 
         String imageFullPath = "/sdcard/screen_cap.png";
         JadbConnection connection = new JadbConnection();

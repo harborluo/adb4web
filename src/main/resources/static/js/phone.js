@@ -8,7 +8,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
     $scope.device = {
         connected : false,
         serialNo : "N/A",
-        screenImage : "EMPTY.png",
+        screenImage : "",
         zoomScale : 0.4,
         mouse: {
             x: 0,

@@ -7,41 +7,54 @@
     <script type="application/javascript" src="/webjars/angularjs/angular.min.js"></script>
     <script type="application/javascript" src="/js/phone.js"></script>
 </head>
-<body>
-<!--
-<image class="img-responsive" alt="Responsive image" src="/test.png"></image>
 
-<div class="form-group has-success">
-    <label class="control-label" for="inputSuccess1">Input with success</label>
-    <input type="text" class="form-control" id="inputSuccess1" aria-describedby="helpBlock2">
-    <span id="helpBlock2" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>
-</div>
--->
-<div ng-app="phone" ng-controller="PhoneController" class="container">
-    <div class="row row-centered">
-        <div class="col-md-8 col-md-offset-2">
-           <table class="table table-bordered table-hover">
-               <caption ng-show="deviceList.length==0">No devices connected.</caption>
-               <tr ng-show="deviceList.length>0">
-                   <th>Serial No</th>
-                   <th>Screen width</th>
-                   <th>Screen height</th>
-               </tr>
-               <tr ng-repeat="dev in deviceList">
-                   <td ng-mousemove="captureScreen(dev.serialNo, dev.screenWidth, dev.screenHeight)">{{dev.serialNo}}</td>
-                   <td>{{dev.screenWidth}}</td>
-                   <td>{{dev.screenHeight}}</td>
-               </tr>
-           </table>
-        </div>
-        <div class="row row-centered" ng-show="device.connected">
-            <image ig-if="device.connected==true" class="img-responsive center-block"
-                   ng-click="tapScreen($event)"
-                   src="/{{device.screenImage}}" width="{{device.screen.width}}" height="{{device.screen.height}}"></image>
-            <span>x={{device.mouse.x}},y={{device.mouse.y}}</span>
+<body  ng-app="phone" ng-controller="PhoneController" >
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">连接设备列表</h3>
+            </div>
+
+            <div class="panel-body">
+                <table class="table table-bordered table-hover">
+                    <caption ng-show="deviceList.length==0">No devices connected.</caption>
+                    <tr ng-show="deviceList.length>0">
+                        <th>Serial No</th>
+                        <th>Screen width</th>
+                        <th>Screen height</th>
+                    </tr>
+                    <tr ng-repeat="dev in deviceList">
+                        <td ng-mousemove="captureScreen(dev.serialNo, dev.screenWidth, dev.screenHeight)">{{dev.serialNo}}</td>
+                        <td>{{dev.screenWidth}}</td>
+                        <td>{{dev.screenHeight}}</td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </div>
+
+    <div id="content" class="row-fluid">
+        <div class="col-md-4">
+            <image ng-show="device.connected==true"
+                   class="img-responsive center-block"
+                   ng-click="tapScreen($event)"
+                   src="/{{device.screenImage}}"
+                   width="{{device.screen.width}}"
+                   height="{{device.screen.height}}"/>
+        </div>
+        <div class="col-md-8">
+
+        </div>
+    </div>
+
 </div>
+
 
 </body>
 </html>
