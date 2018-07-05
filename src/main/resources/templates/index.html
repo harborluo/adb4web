@@ -49,6 +49,13 @@
                    height="{{device.screen.height}}"/>
         </div>
         <div class="col-md-8">
+            <table class="table" ng-show="device.connected==true">
+                <tr>
+                    <td ng-repeat="app in appList">
+                        <button class="btn btn-primary btn-lg" ng-click="startApp(app.name)">{{app.label}}</button>
+                    </td>
+                </tr>
+            </table>
 
         </div>
     </div>

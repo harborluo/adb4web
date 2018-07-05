@@ -22,6 +22,10 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     $scope.deviceList = [];
 
+    $scope.appList = [];
+
+
+
     $scope.getConnectedDevices = function(){
         $http.get(url+"/devices/list").success(function (response) {
             $scope.deviceList = response;
@@ -31,6 +35,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
                                      $scope.deviceList[0].screenWidth,
                                      $scope.deviceList[0].screenHeight);
 
+                $scope.initAppList();
             }
 
         });
@@ -75,8 +80,6 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
         });
     };
 
-
-
     $scope.refreshScreen = function(){
 
         if($scope.device.connected == false) {
@@ -91,11 +94,24 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
         console.log("Auto refresh screen...")
         $scope.captureScreen($scope.device.serialNo);
 
-    }
+    };
+
+    $scope.initAppList = function(){
+        var listUrl = url + "/app/game/list";
+        $http.get(listUrl).success(function (response) {
+            $scope.appList = response;
+        });
+    };
+
+    $scope.startApp = function(appName){
+        var listUrl = url + "/app/game/start?appName="+appName;
+        $http.post(listUrl).success(function (response) {
+           // $scope.appList = response;
+            console.log(response.message);
+        });
+    };
 
     //on load
     $scope.getConnectedDevices();
     $interval($scope.refreshScreen, 1000, -1);
 });
-
-

@@ -1,5 +1,8 @@
 package com.harbor.web.adb.service;
 
+import net.sourceforge.tess4j.util.LoggHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.vidstige.jadb.JadbConnection;
 import se.vidstige.jadb.JadbDevice;
@@ -16,6 +19,8 @@ import java.util.List;
  */
 @Service
 public class ADBService {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public List<PhoneDevice> getConnectedDevice() throws Exception{
 
@@ -91,6 +96,27 @@ public class ADBService {
         }
     }
 
+    /**
+     * start -n com.m37.dtszjwd.sy37/MainActivity
+     * @param command
+     * @param args
+     */
+    public void executeShell(String command, String... args){
+        JadbConnection connection = new JadbConnection();
+        try {
+            InputStream inputStream = connection.getAnyDevice().executeShell(command, args);
+            String log = inputStream2String(inputStream);
+            logger.info("Execute shell command {}, logs is {}", command, log);
+        } catch (IOException e) {
+            logger.error("IOException: ", e);
+        } catch (JadbException e) {
+            logger.error("JadbException: ", e);
+        }catch (Exception e){
+            logger.error("Exception: ", e);
+        }
+
+    }
+
     private String inputStream2String(InputStream inputStream) throws Exception{
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
@@ -102,4 +128,8 @@ public class ADBService {
 
         return log;
     }
+
+
+
+
 }

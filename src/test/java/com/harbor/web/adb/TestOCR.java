@@ -34,7 +34,7 @@ public class TestOCR {
     ITesseract instance;
 
     private final String datapath = "src/test/resources";
-    private final String testResourcesDataPath = "src/test/resources/test-data";
+//    private final String testResourcesDataPath = "src/test/resources/test-data";
     private final String testResourcesLanguagePath = "src/main/resources/tessdata";
 
     @BeforeClass
