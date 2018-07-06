@@ -52,11 +52,11 @@
             <table class="table" ng-show="device.connected==true">
                 <tr>
                     <td ng-repeat="app in appList">
-                        <button class="btn btn-primary btn-lg" ng-click="startApp(app.name)">{{app.label}}</button>
+                        <button class="btn btn-primary btn-lg btn-block" ng-click="startApp(app.name)">{{app.label}}</button>
                     </td>
                 </tr>
             </table>
-
+            <textarea id="PhoneConsole" class="form-control" style="height: 100%;width:100%" disabled></textarea>
         </div>
     </div>
 
