@@ -8,13 +8,11 @@
     <script src="/webjars/angularjs/angular.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <!--
-    <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
-    -->
     <script type="text/javascript" src="/js/chat.js"> </script>
 </head>
 <body ng-app="app" ng-controller="MainController">
+
+<div class="container">
 
 <h2>spring boot + websocket example</h2>
 
@@ -23,25 +21,39 @@
 <button type="button" ng-click="disconnect()" ng-disabled="!data.connected">断开</button>
 <br/>
 <br/>
-<div ng-show="data.connected">
+<div ng-show="data.connected" class="row-fluid">
     <label>{{data.time}}</label> <br/> <br/>
     <input type="text" ng-model="data.message" placeholder="请输入内容..."/>
     <button ng-click="send()" type="button">发送</button>
-    <br/> <br/> 消息列表： <br/>
-    <table>
-        <thead>
-        <tr>
-            <th>内容</th>
-            <th>时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="row in data.rows">
-            <td>{{row.message}}</td>
-            <td>{{row.date}}</td>
-        </tr>
-        </tbody>
-    </table>
+
+    <div class="row">
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">消息列表：</h3>
+            </div>
+
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>内容</th>
+                        <th>时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in data.rows">
+                        <td>{{row.message}}</td>
+                        <td>{{row.date}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
 </div>
 </body>
 </html>

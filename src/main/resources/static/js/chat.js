@@ -46,5 +46,6 @@ app.controller('MainController', function ($rootScope, $scope, $http) {
         stompClient.send("/app/send", {}, JSON.stringify({
             'message': $scope.data.message
         }));
+        $scope.data.message='';
     };
 });
