@@ -35,22 +35,22 @@ public class AndroidAppRestController {
         list.add(app);
 
         app = new HashMap<>();
-        app.put("label","worker1");
+        app.put("label","Arsenal");
         app.put("name","dkmodel.cxo.cxc/com.bly.dkplat.PluginFirstRunActivity");
         list.add(app);
 
         app = new HashMap<>();
-        app.put("label","worker2");
+        app.put("label","Buddy");
         app.put("name","dkmodel.nqw.qyd/com.bly.dkplat.PluginFirstRunActivity");
         list.add(app);
 
         app = new HashMap<>();
-        app.put("label","worker3");
+        app.put("label","Barcelona");
         app.put("name","dkmodel.kdv.xow/com.bly.dkplat.PluginFirstRunActivity");
         list.add(app);
 
         app = new HashMap<>();
-        app.put("label","worker4");
+        app.put("label","Juventus");
         app.put("name","dkmodel.yem.pmh/com.bly.dkplat.PluginFirstRunActivity");
         list.add(app);
 

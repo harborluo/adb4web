@@ -14,4 +14,9 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/share")
+    public String share() {
+        return "share";
+    }
+
 }
