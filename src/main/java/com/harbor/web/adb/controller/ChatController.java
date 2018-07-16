@@ -31,19 +31,20 @@ public class ChatController {
 
     @MessageMapping("/send")
     @SendTo("/topic/send")
-    public SocketMessage send(SocketMessage message) throws Exception {
+    public SocketMessage send(SocketMessage socketMessage) throws Exception {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        message.date = df.format(new Date());
-        return message;
+        socketMessage.date = df.format(new Date());
+        socketMessage.message = "Server: " + socketMessage.message;
+        return socketMessage;
     }
 
     @Scheduled(fixedRate = 1000)
-    @SendTo("/topic/callback")
-    public Object callback() throws Exception {
+//    @SendTo("/topic/callback")
+    public void callback() throws Exception {
         // 发现消息
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         messagingTemplate.convertAndSend("/topic/callback", df.format(new Date()));
-        return "callback";
+//        return "callback";
     }
 
 }

@@ -1,3 +1,5 @@
+var stompClient = null;
+
 var phone = angular.module('phone', []);
 phone.controller('PhoneController', function ($rootScope, $scope, $http, $location, $interval) {
 
@@ -7,7 +9,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     $scope.device = {
         connected : false,
-        serialNo : "N/A",
+        serialNo : "blank",
         screenImage : "",
         zoomScale : 0.4,
         mouse: {
@@ -23,8 +25,6 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
     $scope.deviceList = [];
 
     $scope.appList = [];
-
-
 
     $scope.getConnectedDevices = function(){
         $http.get(url+"/devices/list").success(function (response) {
@@ -46,15 +46,18 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
         var captureUrl = url + "/devices/capture/screen/" + sn;
         $http.get(captureUrl).success(function (response) {
           if(response.success=="true"){
+              /*
               $scope.device.connected = true;
               $scope.device.serialNo = sn;
               $scope.device.screenImage = response.imagePath;
+               */
               if(scrWidth){
                   $scope.device.screen.width = scrWidth *  $scope.device.zoomScale;
               }
               if(scrHeight){
                   $scope.device.screen.height = scrHeight * $scope.device.zoomScale;
               }
+
               lastRefreshInSeconds = 0;
           }else{
               $scope.device.connected = false;
@@ -70,6 +73,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
         var tapUrl = url + "/devices/tap/screen/"+$scope.device.serialNo+"/"+actualX+"/" + actualY;
         //alert(tapUrl);
         console.log("tab on screen, x = " + actualX + ", y = "+ actualY);
+
         $http.get(tapUrl).success(function (response) {
             if(response.success=="true"){
                 $scope.device.screenImage = response.imagePath;
@@ -78,14 +82,15 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
                 $scope.device.connected = false;
             }
         });
+
     };
 
     $scope.refreshScreen = function(){
 
-        if($scope.device.connected == false) {
+        if($scope.device.connected == true) {
             return;
         }
-
+/*
         lastRefreshInSeconds = lastRefreshInSeconds + 1;
 
         if(lastRefreshInSeconds < 5 ){
@@ -93,7 +98,21 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
         }
         console.log("Auto refresh screen...")
         $scope.captureScreen($scope.device.serialNo);
+*/
+        var socket = new SockJS('/my-websocket');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
 
+            //receive message from web socket
+            stompClient.subscribe('/topic/captureScreen', function (msg) {
+                console.log("receive screen images from web socket...");
+               var jsonBody = JSON.parse(msg.body)
+                $scope.device.screenImage = jsonBody.image;
+                $scope.$apply();
+            });
+
+        });
+        $scope.device.connected = true;
     };
 
     $scope.initAppList = function(){

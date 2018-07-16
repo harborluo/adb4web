@@ -35,6 +35,7 @@ public class HealthCheckSchedule {
          }catch (Exception e){
 
              try {
+
                  Process process = rt.exec("taskkill /IM adb.exe /F");
                  BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
                  String line = null;

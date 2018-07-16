@@ -3,6 +3,9 @@ package com.harbor.web.adb.service;
 import net.sourceforge.tess4j.util.LoggHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import se.vidstige.jadb.JadbConnection;
 import se.vidstige.jadb.JadbDevice;
@@ -11,7 +14,10 @@ import se.vidstige.jadb.RemoteFile;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +25,12 @@ import java.util.List;
  */
 @Service
 public class ADBService {
+
+    @Value("${android.screen.shot.dir}")
+    private String screenShotDir;
+
+    @Autowired
+    PhoneSocketService phoneSocketService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -50,19 +62,28 @@ public class ADBService {
         return phoneDeviceList;
     }
 
-    private String lastScreenFile = null;
+//    private String lastScreenFile = null;
 
-    public synchronized boolean captureScreen(String filePath){
+    @Scheduled(fixedRate = 2000)
+    public synchronized void captureScreen(){
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+        String file = "capture_screen_"+dateFormat.format(new Date())+".png";
 
         String imageFullPath = "/sdcard/screen_cap.png";
         JadbConnection connection = new JadbConnection();
         try {
+
+            if(connection.getAnyDevice()==null){
+                return;
+            }
+
             InputStream inputStream = connection.getAnyDevice().executeShell("screencap", "-p", imageFullPath);
 
             String log = inputStream2String(inputStream);
 
             RemoteFile remoteFile = new RemoteFile(imageFullPath);
-            File localFile = new File(filePath);
+            File localFile = new File(screenShotDir + "/" + file);
 
             if(localFile.exists()==false){
                 localFile.createNewFile();
@@ -77,10 +98,10 @@ public class ADBService {
 
            //remove capture screen file on phone
             connection.getAnyDevice().executeShell("rm", "-f", imageFullPath);
-            return true;
 
+            phoneSocketService.sendCapturedImage(file);
         }catch(Exception e){
-            return false;
+
         }
     }
 
@@ -128,8 +149,5 @@ public class ADBService {
 
         return log;
     }
-
-
-
 
 }

@@ -14,15 +14,19 @@ app.controller('MainController', function ($rootScope, $scope, $http) {
 
     //连接
     $scope.connect = function () {
+
         var socket = new SockJS('/my-websocket');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            // 注册发送消息
+
+            // // 注册发送消息
             stompClient.subscribe('/topic/send', function (msg) {
                 $scope.data.rows.push(JSON.parse(msg.body));
                 $scope.data.connected = true;
                 $scope.$apply();
             });
+
+
             // 注册推送时间回调
             stompClient.subscribe('/topic/callback', function (r) {
                 $scope.data.time = '当前服务器时间：' + r.body;

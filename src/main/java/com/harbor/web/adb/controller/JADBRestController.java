@@ -2,9 +2,12 @@ package com.harbor.web.adb.controller;
 
 import com.harbor.web.adb.service.ADBService;
 import com.harbor.web.adb.service.PhoneDevice;
+import com.harbor.web.adb.service.PhoneSocketMessage;
+import com.harbor.web.adb.service.PhoneSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import se.vidstige.jadb.JadbDevice;
 
@@ -30,6 +33,9 @@ public class JADBRestController {
     @Autowired
     ADBService adbService;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @GetMapping("/list")
     public List<PhoneDevice> getAllDevices(){
         try {
@@ -49,14 +55,12 @@ public class JADBRestController {
     public Map<String,String> captureScreen(@PathVariable String serialNumber){
         Map<String,String> result = new HashMap<>();
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+        new Thread( ()->{
+                 adbService.captureScreen();
+        }).start();
 
-        String file = "capture_screen_"+dateFormat.format(new Date())+".png";
+        result.put("success","true");
 
-        boolean success = adbService.captureScreen(screenShotDir + "/" + file);
-
-        result.put("success",success + "");
-        result.put("imagePath",success ? file : "");
         return result;
 
     }
