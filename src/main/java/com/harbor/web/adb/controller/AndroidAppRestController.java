@@ -1,5 +1,7 @@
 package com.harbor.web.adb.controller;
 
+import com.harbor.web.adb.conf.AppDefinition;
+import com.harbor.web.adb.conf.ConfigProperties;
 import com.harbor.web.adb.service.ADBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +21,16 @@ public class AndroidAppRestController {
     @Autowired
     ADBService service;
 
+    @Autowired
+    ConfigProperties configProperties;
 
     /**
      * adb shell dumpsys package | grep -E "com.m37|dkmodel" | grep -i activity
      * @return
      */
     @GetMapping("/game/list")
-    public List<Map<String,String>> listGames(){
-
+    public List<AppDefinition> listGames(){
+/*
         List<Map<String,String>> list = new ArrayList<>();
 
         Map<String,String> app = new HashMap<>();
@@ -55,6 +59,8 @@ public class AndroidAppRestController {
         list.add(app);
 
         return list;
+*/
+        return configProperties.getAndroidApps();
     }
 
     /**

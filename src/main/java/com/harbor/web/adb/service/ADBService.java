@@ -64,7 +64,7 @@ public class ADBService {
 
 //    private String lastScreenFile = null;
 
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 4000)
     public synchronized void captureScreen(){
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
