@@ -43,7 +43,7 @@
 
     <div id="content" class="row-fluid">
         <div class="col-md-4 well">
-            <image ng-show="device.connected==true"
+            <image ng-show="device.screenImage!='blank.png'"
                    class="img-responsive center-block"
                    ng-click="tapScreen($event)"
                    src="/{{device.screenImage}}"
