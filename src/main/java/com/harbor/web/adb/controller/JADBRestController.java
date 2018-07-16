@@ -55,9 +55,9 @@ public class JADBRestController {
     public Map<String,String> captureScreen(@PathVariable String serialNumber){
         Map<String,String> result = new HashMap<>();
 
-        new Thread( ()->{
+//        new Thread( ()->{
                  adbService.captureScreen();
-        }).start();
+//        }).start();
 
         result.put("success","true");
 

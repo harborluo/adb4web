@@ -16,9 +16,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by harbor on 6/29/2018.
@@ -31,6 +29,8 @@ public class ADBService {
 
     @Autowired
     PhoneSocketService phoneSocketService;
+
+    private Queue<String> imageFileQueue = new LinkedList<String>();
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -100,9 +100,28 @@ public class ADBService {
             connection.getAnyDevice().executeShell("rm", "-f", imageFullPath);
 
             phoneSocketService.sendCapturedImage(file);
+
+            imageFileQueue.add(file);
+
         }catch(Exception e){
 
         }
+    }
+
+    @Scheduled(cron = "0/2 * * * * *")
+    public void cleanScreenShot(){
+
+        int MAX_SIZE = 3;
+
+        if(this.imageFileQueue.size()<MAX_SIZE){
+            return;
+        }
+
+        while(imageFileQueue.size()>MAX_SIZE){
+            String file = imageFileQueue.poll();
+            new File(screenShotDir+"/"+file).delete();
+        }
+
     }
 
     public boolean tapScreen(String x, String y){
