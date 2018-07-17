@@ -26,6 +26,8 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     $scope.appList = [];
 
+    $scope.eventMessage = "";
+
     $scope.getConnectedDevices = function(){
         $http.get(url+"/devices/list").success(function (response) {
             $scope.deviceList = response;
@@ -85,6 +87,10 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     };
 
+    $scope.publishEvent = function(msg) {
+        $scope.eventMessage +=msg+"\n";
+    };
+
     $scope.refreshScreen = function(){
 
         if($scope.device.connected == true) {
@@ -109,6 +115,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
                var jsonBody = JSON.parse(msg.body)
                 $scope.device.screenImage = jsonBody.image;
                 $scope.$apply();
+                $scope.publishEvent("["+jsonBody.date+"] Captured screen image: '"+jsonBody.image+"'");
             });
 
         });
@@ -129,6 +136,8 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
             console.log(response.message);
         });
     };
+
+
 
     //on load
     $scope.getConnectedDevices();
