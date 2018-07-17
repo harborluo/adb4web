@@ -34,6 +34,7 @@ public class ADBService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Scheduled(fixedRate = 5000)
     public List<PhoneDevice> getConnectedDevice() throws Exception{
 
         JadbConnection connection = new JadbConnection();
@@ -59,6 +60,9 @@ public class ADBService {
 
 
         }
+
+        phoneSocketService.sendConnectedDevice(phoneDeviceList);
+
         return phoneDeviceList;
     }
 

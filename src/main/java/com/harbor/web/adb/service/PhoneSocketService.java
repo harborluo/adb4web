@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by harbor on 7/13/2018.
@@ -20,10 +21,15 @@ public class PhoneSocketService {
 
 //    @SendTo("/phoneSend/captureScreen")
     public void sendCapturedImage(String imageName){
-        PhoneSocketMessage message = new PhoneSocketMessage();
-        message.setImage(imageName);
+        PhoneSocketMessage<String> message = new PhoneSocketMessage();
+        message.setData(imageName);
         messagingTemplate.convertAndSend("/topic/captureScreen",message);
     }
 
 
+    public void sendConnectedDevice(List<PhoneDevice> devices){
+        PhoneSocketMessage<List<PhoneDevice>> message = new PhoneSocketMessage();
+        message.setData(devices);
+        messagingTemplate.convertAndSend("/topic/devices/list",message);
+    }
 }

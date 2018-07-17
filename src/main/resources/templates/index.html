@@ -41,17 +41,16 @@
         </div>
     </div>
 
-    <div id="content" class="row-fluid">
+    <div id="content" class="row-fluid" ng-show="deviceList.length>0">
         <div class="col-md-4 well">
-            <image ng-show="device.screenImage!='blank.png'"
-                   class="img-responsive center-block"
+            <image class="img-responsive center-block"
                    ng-click="tapScreen($event)"
                    src="/{{device.screenImage}}"
                    width="{{device.screen.width}}"
                    height="{{device.screen.height}}"/>
         </div>
         <div class="col-md-8">
-            <table class="table" ng-show="device.connected==true">
+            <table class="table">
                 <tr>
                     <td ng-repeat="app in appList">
                         <button class="btn btn-primary btn-lg btn-block" ng-click="startApp(app.name)">{{app.label}}</button>

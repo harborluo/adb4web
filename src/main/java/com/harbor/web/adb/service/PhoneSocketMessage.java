@@ -7,10 +7,10 @@ import java.util.Date;
 /**
  * Created by harbor on 7/13/2018.
  */
-public class PhoneSocketMessage {
+public class PhoneSocketMessage<T> {
     private int code;
     private String date;
-    private String image;
+    private T data;
     private String message;
 
     public PhoneSocketMessage(){
@@ -27,12 +27,12 @@ public class PhoneSocketMessage {
         this.code = code;
     }
 
-    public String getImage() {
-        return image;
+    public T getData() {
+        return data;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setData(T data) {
+        this.data = data;
     }
 
     public String getMessage() {
@@ -46,4 +46,5 @@ public class PhoneSocketMessage {
     public String getDate() {
         return date;
     }
+
 }

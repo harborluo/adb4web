@@ -28,20 +28,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     $scope.eventMessage = "";
 
-    $scope.getConnectedDevices = function(){
-        $http.get(url+"/devices/list").success(function (response) {
-            $scope.deviceList = response;
 
-            if($scope.deviceList.length==1){
-                $scope.captureScreen($scope.deviceList[0].serialNo,
-                                     $scope.deviceList[0].screenWidth,
-                                     $scope.deviceList[0].screenHeight);
-
-                $scope.initAppList();
-            }
-
-        });
-    };
 
     $scope.captureScreen = function(sn, scrWidth, scrHeight){
 
@@ -90,25 +77,16 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
     $scope.publishEvent = function(msg) {
         $scope.eventMessage +=msg+"\n";
     };
-
+/*
     $scope.refreshScreen = function(){
 
         if($scope.device.connected == true) {
             return;
         }
-/*
-        lastRefreshInSeconds = lastRefreshInSeconds + 1;
 
-        if(lastRefreshInSeconds < 5 ){
-            return;
-        }
-        console.log("Auto refresh screen...")
-        $scope.captureScreen($scope.device.serialNo);
-*/
         var socket = new SockJS('/my-websocket');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-
             //receive message from web socket
             stompClient.subscribe('/topic/captureScreen', function (msg) {
                 console.log("receive screen images from web socket...");
@@ -119,9 +97,10 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
             });
 
         });
+
         $scope.device.connected = true;
     };
-
+*/
     $scope.initAppList = function(){
         var listUrl = url + "/app/game/list";
         $http.get(listUrl).success(function (response) {
@@ -137,9 +116,61 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
         });
     };
 
+    $scope.getConnectedDevices = function(){
+
+
+        $http.get(url+"/devices/list").success(function (response) {
+            $scope.deviceList = response;
+
+            if($scope.deviceList.length==1){
+                $scope.captureScreen($scope.deviceList[0].serialNo,
+                    $scope.deviceList[0].screenWidth,
+                    $scope.deviceList[0].screenHeight);
+
+                $scope.initAppList();
+            }
+
+        });
+
+        var socket = new SockJS('/my-websocket');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            //receive message from web socket
+            stompClient.subscribe('/topic/captureScreen', function (msg) {
+                console.log("receive screen images from web socket...");
+                var jsonBody = JSON.parse(msg.body)
+                $scope.device.screenImage = jsonBody.data;
+                $scope.$apply();
+                $scope.publishEvent("["+jsonBody.date+"] Captured screen image: '"+jsonBody.data+"'");
+            });
+
+            stompClient.subscribe('/topic/devices/list', function (msg) {
+
+                console.log("receive connected devices from web socket...");
+
+                var jsonBody = JSON.parse(msg.body);
+
+                $scope.deviceList = jsonBody.data;
+
+                if($scope.deviceList.length==1){
+                    $scope.captureScreen($scope.deviceList[0].serialNo,
+                        $scope.deviceList[0].screenWidth,
+                        $scope.deviceList[0].screenHeight);
+
+                    $scope.initAppList();
+                }
+
+                //$scope.device.screenImage = jsonBody.data;
+                $scope.$apply();
+                //$scope.publishEvent("["+jsonBody.date+"] Captured screen image: '"+jsonBody.image+"'");
+            });
+
+        });
+
+    };
 
 
     //on load
     $scope.getConnectedDevices();
-    $interval($scope.refreshScreen, 1000, -1);
+    //$interval($scope.refreshScreen, 1000, -1);
 });
