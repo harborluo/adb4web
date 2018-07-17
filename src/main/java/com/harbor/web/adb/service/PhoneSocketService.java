@@ -23,13 +23,18 @@ public class PhoneSocketService {
     public void sendCapturedImage(String imageName){
         PhoneSocketMessage<String> message = new PhoneSocketMessage();
         message.setData(imageName);
+        message.setMessage("Captured screen successfully.");
         messagingTemplate.convertAndSend("/topic/captureScreen",message);
     }
-
 
     public void sendConnectedDevice(List<PhoneDevice> devices){
         PhoneSocketMessage<List<PhoneDevice>> message = new PhoneSocketMessage();
         message.setData(devices);
+        if(devices.size()==0) {
+            message.setMessage("No connected devices found.");
+        }else{
+            message.setMessage(devices.size()+" connected devices found.");
+        }
         messagingTemplate.convertAndSend("/topic/devices/list",message);
     }
 }
