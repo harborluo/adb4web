@@ -115,7 +115,7 @@ public class ADBService {
     @Scheduled(cron = "0/2 * * * * *")
     public void cleanScreenShot(){
 
-        int MAX_SIZE = 3;
+        int MAX_SIZE = 20;
 
         if(this.imageFileQueue.size()<MAX_SIZE){
             return;
