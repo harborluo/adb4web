@@ -1,11 +1,11 @@
 package com.harbor.web.adb.service;
 
-import net.sourceforge.tess4j.util.LoggHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Service;
 import se.vidstige.jadb.JadbConnection;
 import se.vidstige.jadb.JadbDevice;
@@ -30,11 +30,9 @@ public class ADBService {
     @Autowired
     PhoneSocketService phoneSocketService;
 
-    private Queue<String> imageFileQueue = new LinkedList<String>();
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Scheduled(fixedRate = 5000)
+
     public List<PhoneDevice> getConnectedDevice() throws Exception{
 
         JadbConnection connection = new JadbConnection();
@@ -68,8 +66,11 @@ public class ADBService {
 
 //    private String lastScreenFile = null;
 
-    @Scheduled(fixedRate = 5000)
-    public synchronized void captureScreen(){
+    /**
+     *
+     * @return image file name
+     */
+    public synchronized String captureScreen(){
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
         String file = "capture_screen_"+dateFormat.format(new Date())+".png";
@@ -79,7 +80,7 @@ public class ADBService {
         try {
 
             if(connection.getAnyDevice()==null){
-                return;
+                return null;
             }
 
             InputStream inputStream = connection.getAnyDevice().executeShell("screencap", "-p", imageFullPath);
@@ -105,28 +106,19 @@ public class ADBService {
 
             phoneSocketService.sendCapturedImage(file);
 
-            imageFileQueue.add(file);
+//            imageFileQueue.add(file);
+
+            logger.info("Capture image with name '{}'", file);
+
+            return file;
 
         }catch(Exception e){
-
+            logger.error("Capture device screen ERROR:", e);
         }
+
+        return null;
     }
 
-    @Scheduled(cron = "0/2 * * * * *")
-    public void cleanScreenShot(){
-
-        int MAX_SIZE = 20;
-
-        if(this.imageFileQueue.size()<MAX_SIZE){
-            return;
-        }
-
-        while(imageFileQueue.size()>MAX_SIZE){
-            String file = imageFileQueue.poll();
-            new File(screenShotDir+"/"+file).delete();
-        }
-
-    }
 
     public boolean tapScreen(String x, String y){
         JadbConnection connection = new JadbConnection();

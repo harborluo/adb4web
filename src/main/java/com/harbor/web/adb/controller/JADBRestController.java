@@ -4,6 +4,8 @@ import com.harbor.web.adb.service.ADBService;
 import com.harbor.web.adb.service.PhoneDevice;
 import com.harbor.web.adb.service.PhoneSocketMessage;
 import com.harbor.web.adb.service.PhoneSocketService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -30,6 +32,8 @@ public class JADBRestController {
     @Value("${android.screen.shot.dir}")
     private String screenShotDir;
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     ADBService adbService;
 
@@ -53,10 +57,13 @@ public class JADBRestController {
 
     @GetMapping("/capture/screen/{serialNumber}")
     public Map<String,String> captureScreen(@PathVariable String serialNumber){
+
+        logger.info("Receive capture screen from browser.");
+
         Map<String,String> result = new HashMap<>();
 
 //        new Thread( ()->{
-                 adbService.captureScreen();
+        adbService.captureScreen();
 //        }).start();
 
         result.put("success","true");

@@ -31,9 +31,9 @@
                         <th>Screen height</th>
                     </tr>
                     <tr ng-repeat="dev in deviceList">
-                        <td ng-mousemove="captureScreen(dev.serialNo, dev.screenWidth, dev.screenHeight)">{{dev.serialNo}}</td>
-                        <td>{{dev.screenWidth}}</td>
-                        <td>{{dev.screenHeight}}</td>
+                        <td ng-click="captureScreen(dev.serialNo, dev.screenWidth, dev.screenHeight)">{{dev.serialNo}}</td>
+                        <td ng-click="captureScreen(dev.serialNo, dev.screenWidth, dev.screenHeight)">{{dev.screenWidth}}</td>
+                        <td ng-click="captureScreen(dev.serialNo, dev.screenWidth, dev.screenHeight)">{{dev.screenHeight}}</td>
                     </tr>
                 </table>
             </div>

@@ -5,7 +5,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     var url = $location.path();
 
-    var lastRefreshInSeconds = 0;
+    //var lastRefreshInSeconds = 0;
 
     $scope.device = {
         connected : false,
@@ -47,7 +47,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
                   $scope.device.screen.height = scrHeight * $scope.device.zoomScale;
               }
 
-              lastRefreshInSeconds = 0;
+              //lastRefreshInSeconds = 0;
           }else{
               $scope.device.connected = false;
           }
@@ -66,7 +66,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
         $http.get(tapUrl).success(function (response) {
             if(response.success=="true"){
                 $scope.device.screenImage = response.imagePath;
-                lastRefreshInSeconds = 0;
+                //lastRefreshInSeconds = 0;
             } else {
                 $scope.device.connected = false;
             }
@@ -77,30 +77,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
     $scope.publishEvent = function(msg) {
         $scope.eventMessage +=msg+"\n";
     };
-/*
-    $scope.refreshScreen = function(){
 
-        if($scope.device.connected == true) {
-            return;
-        }
-
-        var socket = new SockJS('/my-websocket');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            //receive message from web socket
-            stompClient.subscribe('/topic/captureScreen', function (msg) {
-                console.log("receive screen images from web socket...");
-               var jsonBody = JSON.parse(msg.body)
-                $scope.device.screenImage = jsonBody.image;
-                $scope.$apply();
-                $scope.publishEvent("["+jsonBody.date+"] Captured screen image: '"+jsonBody.image+"'");
-            });
-
-        });
-
-        $scope.device.connected = true;
-    };
-*/
     $scope.initAppList = function(){
         var listUrl = url + "/app/game/list";
         $http.get(listUrl).success(function (response) {
@@ -118,11 +95,12 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     $scope.getConnectedDevices = function(){
 
-
         $http.get(url+"/devices/list").success(function (response) {
+
             $scope.deviceList = response;
 
             if($scope.deviceList.length==1){
+
                 $scope.captureScreen($scope.deviceList[0].serialNo,
                     $scope.deviceList[0].screenWidth,
                     $scope.deviceList[0].screenHeight);
@@ -152,13 +130,13 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
                 $scope.deviceList = jsonBody.data;
 
-                if($scope.deviceList.length==1){
-                    $scope.captureScreen($scope.deviceList[0].serialNo,
-                        $scope.deviceList[0].screenWidth,
-                        $scope.deviceList[0].screenHeight);
+                // if($scope.deviceList.length==1){
+                    // $scope.captureScreen($scope.deviceList[0].serialNo,
+                    //     $scope.deviceList[0].screenWidth,
+                    //     $scope.deviceList[0].screenHeight);
 
-                    $scope.initAppList();
-                }
+                    // $scope.initAppList();
+                // }
 
                 //$scope.device.screenImage = jsonBody.data;
                 $scope.$apply();
@@ -169,8 +147,7 @@ phone.controller('PhoneController', function ($rootScope, $scope, $http, $locati
 
     };
 
-
     //on load
     $scope.getConnectedDevices();
-    //$interval($scope.refreshScreen, 1000, -1);
+
 });
