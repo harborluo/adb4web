@@ -58,7 +58,7 @@ public class JADBRestController {
     @GetMapping("/capture/screen/{serialNumber}")
     public Map<String,String> captureScreen(@PathVariable String serialNumber){
 
-        logger.info("Receive capture screen from browser.");
+        logger.info("Receive capture screen request from browser.");
 
         Map<String,String> result = new HashMap<>();
 

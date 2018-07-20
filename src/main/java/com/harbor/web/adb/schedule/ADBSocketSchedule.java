@@ -24,7 +24,7 @@ public class ADBSocketSchedule {
 
     private Queue<String> imageFileQueue = new LinkedList<String>();
 
-    @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0/5 * * * * *")
     public void autoCaptureScreen(){
         String imageFile = service.captureScreen();
         if(imageFile==null){
